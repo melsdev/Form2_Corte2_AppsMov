@@ -1,5 +1,6 @@
 package com.example.pruebarecycleview;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -16,10 +17,11 @@ import com.example.pruebarecycleview.clases.Usuario;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements UsuarioAdaptador.OnItemClickListener {
 
     RecyclerView rcv_usuario;
     List<Usuario> listaUsuario = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,17 @@ public class MainActivity extends AppCompatActivity {
         listaUsuario.add(usu4);
 
         rcv_usuario.setLayoutManager(new LinearLayoutManager(this));
-        rcv_usuario.setAdapter(new UsuarioAdaptador(listaUsuario));
+        UsuarioAdaptador adapter = new UsuarioAdaptador(listaUsuario, this); // pass the listener to the adapter
+        rcv_usuario.setAdapter(adapter);
     }
+
+    @Override
+    public void onItemClick(int position) {
+        // handle click here, for example:
+        Usuario usuario = listaUsuario.get(position);
+        Intent intent = new Intent(MainActivity.this, DetalleUsuario.class);
+        intent.putExtra("usuario", (CharSequence) usuario);
+        startActivity(intent);
+    }
+
 }

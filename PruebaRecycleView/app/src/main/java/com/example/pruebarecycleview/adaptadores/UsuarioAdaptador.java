@@ -1,5 +1,6 @@
 package com.example.pruebarecycleview.adaptadores;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,11 @@ import java.util.List;
 public class UsuarioAdaptador extends RecyclerView.Adapter<UsuarioAdaptador.ViewHolder> {
 
     private List<Usuario> datos;
+    private OnItemClickListener listener;
 
-    public UsuarioAdaptador(List<Usuario> datos){
+    public UsuarioAdaptador(List<Usuario> datos, OnItemClickListener listener){
         this.datos = datos;
+        this.listener = listener;
     }
     @NonNull
     @Override
@@ -30,10 +33,17 @@ public class UsuarioAdaptador extends RecyclerView.Adapter<UsuarioAdaptador.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull UsuarioAdaptador.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull UsuarioAdaptador.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
 
         Usuario dato = datos.get(position);
         holder.bind(dato);
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(position);
+            }
+        });
     }
 
     @Override
@@ -59,5 +69,9 @@ public class UsuarioAdaptador extends RecyclerView.Adapter<UsuarioAdaptador.View
             // imagen libreria
             Picasso.get().load(dato.getImagen()).into(img_usuario);
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(int position);
     }
 }
